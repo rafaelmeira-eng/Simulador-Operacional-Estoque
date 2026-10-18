@@ -1,4 +1,4 @@
-const CACHE = 'simulador-milho-pwa-v4';
+const CACHE = 'simulador-milho-pwa-v5';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon.png'];
 
 self.addEventListener('install', event => {

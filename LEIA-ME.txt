@@ -1,19 +1,11 @@
-SIMULADOR OPERACIONAL DE MILHO — TEMA AZUL-MARINHO, DOURADO E BRANCO
+SIMULADOR OPERACIONAL DE MILHO — TEMA PROFISSIONAL COM ÍCONES
 
-Arquivos:
-- index.html: simulador com a lógica operacional preservada e o novo tema visual.
-- manifest.webmanifest: configura o aplicativo instalável e seu ícone.
-- sw.js: atualiza a versão do cache offline.
-- icon.png: ícone azul-marinho e dourado.
+Arquivos incluídos:
+- index.html: layout azul-marinho/dourado/branco com ícones vetoriais decorativos nos títulos e controles.
+- manifest.webmanifest: configuração PWA.
+- sw.js: cache atualizado para v5.
+- icon.png: ícone do pacote profissional anterior.
 
-ATUALIZAÇÃO NO GITHUB:
-1. Abra o repositório Simulador-Operacional-Estoque.
-2. Para cada arquivo acima, abra o arquivo existente e use Edit (lápis) para substituir seu conteúdo, quando disponível.
-3. Para icon.png, use Add file > Upload files e substitua o arquivo existente (se o GitHub não aceitar substituir pelo mesmo nome, abra o arquivo atual e use Delete, faça commit e depois envie o novo icon.png).
-4. Faça Commit changes.
-5. Abra o site no Chrome, confirme o tema e desinstale a versão antiga do PWA antes de instalar novamente.
-
-IMPORTANTE:
-- Não altere nem apague outros arquivos do repositório.
-- Faça a atualização com conexão à internet.
-- Dados salvos localmente no aplicativo antigo podem não ser transferidos para a nova instalação. Anote os valores importantes antes de desinstalar.
+Substitua esses quatro arquivos no repositório GitHub, fazendo commit das alterações.
+Depois abra o site pelo Chrome para validar; somente então remova e instale novamente o PWA antigo.
+A lógica operacional foi mantida.
