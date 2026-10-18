@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#173f35">
+<meta name="theme-color" content="#07549A">
 <meta name="description" content="Simulador offline de descarga, moagem e estoque de milho em quatro armazéns.">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon.svg" type="image/svg+xml">
-<title>Simulador de Milho</title>
+<link rel="icon" href="icon.png" type="image/png">
+<title>Simulador Operacional de Milho</title>
 <style>
-:root{--green:#173f35;--green2:#246b54;--bg:#f3f6f5;--card:#fff;--text:#17211e;--muted:#62716b;--border:#dce5e1;--warn:#fff4d7;--red:#a62d2d;--blue:#edf3fa}
+:root{--green:#07549A;--green2:#D6A629;--bg:#f3f6fa;--card:#fff;--text:#17211e;--muted:#62716b;--border:#dce5ee;--warn:#fff4d7;--red:#a62d2d;--blue:#edf3fa}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
 header{background:var(--green);color:#fff;padding:20px max(16px,calc((100vw - 1100px)/2));padding-top:calc(18px + env(safe-area-inset-top));}
-header h1{font-size:1.35rem;margin:0 0 4px}header p{margin:0;color:#dcebe5;font-size:.92rem}
+header h1{font-size:1.35rem;margin:0 0 4px}header p{margin:0;color:#e1edfa;font-size:.92rem}
 main{max-width:1100px;margin:auto;padding:16px;display:grid;gap:14px}
 .panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 2px 8px #1231}
 h2{font-size:1.08rem;margin:0 0 14px}h3{font-size:1rem;margin:0}
@@ -21,17 +21,17 @@ label{display:block;font-size:.88rem;color:var(--muted);margin-bottom:5px}
 input,select,button{font:inherit}input:not([type=checkbox]):not([type=range]),select{width:100%;min-width:0;border:1px solid #cbd8d2;border-radius:10px;padding:11px;background:#fff;color:var(--text)}
 input[type=checkbox]{width:20px;height:20px;accent-color:var(--green2)}
 button{border:0;border-radius:10px;padding:11px 14px;background:var(--green);color:#fff;font-weight:650;cursor:pointer}
-button.secondary{background:#e7efeb;color:var(--green)}button.danger{background:#fff0f0;color:var(--red);border:1px solid #f0cece}
+button.secondary{background:#fff4d6;color:#654b05;border:1px solid #ead18a}button.danger{background:#fff0f0;color:var(--red);border:1px solid #f0cece}
 button:active{transform:translateY(1px)}
 small,.muted{color:var(--muted)}.help{font-size:.82rem;color:var(--muted);margin-top:5px}
 .metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.metric{background:#f7faf8;border:1px solid var(--border);border-radius:12px;padding:12px;min-width:0}
+.metric{background:#f7f9fc;border:1px solid var(--border);border-radius:12px;padding:12px;min-width:0}
 .metric .k{font-size:.82rem;color:var(--muted)}.metric .v{font-size:1.35rem;font-weight:750;overflow-wrap:anywhere}
 .metric .unit{font-size:.8rem;font-weight:500;color:var(--muted)}
 .warehouse{border:1px solid var(--border);border-radius:13px;padding:13px;margin-top:10px}
 .whead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.capacity{font-size:.8rem;color:var(--muted);text-align:right}
 .wstats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-.stat{background:#f8faf9;border-radius:9px;padding:9px}.stat .k{font-size:.78rem;color:var(--muted)}.stat strong{display:block;font-size:1.02rem;overflow-wrap:anywhere}
+.stat{background:#f8fafc;border-radius:9px;padding:9px}.stat .k{font-size:.78rem;color:var(--muted)}.stat strong{display:block;font-size:1.02rem;overflow-wrap:anywhere}
 .eventhead{display:flex;align-items:center;gap:10px}.eventfields{margin-top:12px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .status{border-radius:10px;padding:10px;background:var(--blue);margin-top:10px;font-size:.9rem}
 .status.good{background:#e8f5ed;color:#175c39}.status.warn{background:var(--warn);color:#775500}
