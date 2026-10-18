@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF">
 <meta name="description" content="Simulador offline de descarga, moagem e estoque de milho em quatro armazéns.">
+<meta name="simulator-version" content="2026-10-18-corrigido-2">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.png" type="image/png">
 <title>Simulador Operacional de Milho</title>
@@ -248,8 +249,8 @@ function loadState(){
 }
 function saveState(){
  try{
-  const fields={};['grind','direct','withdraw','inflow','truck','nominal','stopDate','stopTime','restartDate','restartTime','timeline'].forEach(k=>fields[k]=$(k).value);
-  localStorage.setItem(stateKey,JSON.stringify({fields,stocks,events}));
+  const fields={};['grind','direct','withdraw','truck','nominal','stopDate','stopTime','restartDate','restartTime','timeline','processRate'].forEach(k=>{if($(k))fields[k]=$(k).value});
+  localStorage.setItem(stateKey,JSON.stringify({fields,stocks,events,receiving,processOn,processRate,rateHistory,historyBase}));
  }catch(e){}
 }
 function renderInitialStocks(){
@@ -277,7 +278,6 @@ function eventRemovalUntil(i,targetT,stopT,grind){
 }
 function snapshotRates(){return {receiving:receiving.map(r=>({...r})),processOn,processRate};}
 function ratesAt(t){
- const restartT=dateTime($('restartDate').value,$('restartTime').value).getTime();
  let snap=historyBase||snapshotRates();
  for(const ev of [...rateHistory].sort((a,b)=>a.t-b.t)){if(ev.t<=t)snap=ev.snap;else break;}
  return snap;
@@ -285,7 +285,6 @@ function ratesAt(t){
 function logRateChange(){
  const stopT=dateTime($('stopDate').value,$('stopTime').value);
  const t=stopT.getTime()+num('timeline')*3600000;
- const restartT=dateTime($('restartDate').value,$('restartTime').value).getTime();
  if(!historyBase)historyBase=snapshotRates();
  rateHistory=rateHistory.filter(e=>e.t<t);
  rateHistory.push({t,snap:snapshotRates()});
@@ -308,10 +307,19 @@ function computeAt(targetT){
  }
  return result.map((v,i)=>clamp(v,0,CAPS[i]));
 }
+function updateReceivingSummary(){
+ const wr=receiving.reduce((a,r)=>a+(r.on?r.rate:0),0),pr=processOn?processRate:0;
+ const stopT=dateTime($('stopDate').value,$('stopTime').value),restartT=dateTime($('restartDate').value,$('restartTime').value),targetT=new Date(stopT.getTime()+num('timeline')*3600000);
+ const from=Math.max(stopT.getTime(),restartT.getTime());
+ const hist=rateHistory.filter(e=>e.t>=from&&e.t<=targetT.getTime()).sort((a,b)=>a.t-b.t);
+ let wh=0,ph=0,cursor=from,snap=ratesAt(cursor);
+ for(const ev of hist){const h=Math.max(0,ev.t-cursor)/3600000;wh+=snap.receiving.reduce((a,r)=>a+(r.on?r.rate:0),0)*h;ph+=(snap.processOn?snap.processRate:0)*h;cursor=ev.t;snap=ev.snap;}
+ const hEnd=Math.max(0,targetT.getTime()-cursor)/3600000;wh+=snap.receiving.reduce((a,r)=>a+(r.on?r.rate:0),0)*hEnd;ph+=(snap.processOn?snap.processRate:0)*hEnd;
+ $('receivingTotal').innerHTML=`Recebimento total atual: <strong>${fmt(wr+pr)} t/h</strong> · Armazéns: <strong>${fmt(wr)} t/h</strong> (${fmt0(wh)} t acumuladas) · Processo direto: <strong>${fmt(pr)} t/h</strong> (${fmt0(ph)} t acumuladas) · Total acumulado: <strong>${fmt0(wh+ph)} t</strong>.`;
+}
 function renderReceiving(){
  $('receivingWarehouses').innerHTML=receiving.map((r,i)=>`<div class="warehouse"><div class="eventhead"><input type="checkbox" data-receive-on="${i}" ${r.on?'checked':''}><label style="margin:0"><strong>Armazém ${i+1}</strong></label></div><div style="margin-top:10px"><label>Taxa destinada (t/h)</label><input data-receive-rate="${i}" type="number" min="0" step="0.1" value="${r.rate}" ${r.on?'':'disabled'}></div><div class="help">Capacidade máxima: ${fmt0(CAPS[i])} t</div></div>`).join('');
- const wr=receiving.reduce((a,r)=>a+(r.on?r.rate:0),0),pr=processOn?processRate:0;
- $('receivingTotal').innerHTML=`Recebimento total estimado: <strong>${fmt(wr+pr)} t/h</strong> · Armazéns: <strong>${fmt(wr)} t/h</strong> · Processo direto: <strong>${fmt(pr)} t/h</strong>.`;
+ updateReceivingSummary();
 }
 
 function syncFlow(source){
@@ -389,7 +397,7 @@ $('initialStocks').addEventListener('input',e=>{if(e.target.dataset.stock!==unde
 $('fillAll').addEventListener('click',()=>{stocks=[...CAPS];refresh()});
 $('emptyAll').addEventListener('click',()=>{stocks=[0,0,0,0];refresh()});
 $('receivingWarehouses').addEventListener('change',e=>{const t=e.target;if(t.dataset.receiveOn!==undefined){receiving[Number(t.dataset.receiveOn)].on=t.checked;renderReceiving();logRateChange();update();}});
-$('receivingWarehouses').addEventListener('input',e=>{const t=e.target;if(t.dataset.receiveRate!==undefined){receiving[Number(t.dataset.receiveRate)].rate=Math.max(0,Number(t.value)||0);logRateChange();renderReceiving();update();}});
+$('receivingWarehouses').addEventListener('input',e=>{const t=e.target;if(t.dataset.receiveRate!==undefined){receiving[Number(t.dataset.receiveRate)].rate=Math.max(0,Number(t.value)||0);logRateChange();updateReceivingSummary();update();}});
 $('processOn').checked=processOn;$('processOn').addEventListener('change',e=>{processOn=e.target.checked;renderReceiving();logRateChange();update();});
 $('processRate').value=processRate;$('processRate').addEventListener('input',e=>{processRate=Math.max(0,Number(e.target.value)||0);renderReceiving();logRateChange();update();});
 $('events').addEventListener('change',e=>{
