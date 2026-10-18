@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#07549A">
+<meta name="theme-color" content="#FFFFFF">
 <meta name="description" content="Simulador offline de descarga, moagem e estoque de milho em quatro armazéns.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.png" type="image/png">
@@ -42,6 +42,58 @@ footer{font-size:.8rem;color:var(--muted);padding:0 4px 18px}
 hr{border:0;border-top:1px solid var(--border);margin:14px 0}
 @media(min-width:760px){main{grid-template-columns:1fr 1fr;align-items:start}.wide{grid-column:1/-1}.metrics{grid-template-columns:repeat(4,minmax(0,1fr))}.warehouse-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.warehouse{margin-top:0}.wstats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:380px){main{padding:10px}.panel{padding:12px}.grid,.eventfields{grid-template-columns:1fr}.metric .v{font-size:1.15rem}}
+
+/* Tema profissional: cabeçalho branco, página azul-marinho, dourado e branco */
+:root{
+ --green:#082B50; --green2:#E8B43F; --bg:#062544; --card:#0B3158;
+ --text:#FFFFFF; --muted:#F0D58A; --border:#174B79;
+ --warn:#594719; --red:#7F252D; --blue:#103D69;
+}
+body{background:linear-gradient(180deg,#062544 0%,#041C35 100%);color:#F6F8FC}
+header{
+ background:#FFFFFF;color:#082B50;
+ border-bottom:4px solid #E8B43F;
+ box-shadow:0 4px 18px #00172c55;
+}
+header h1{color:#082B50;font-weight:800}
+header p{color:#50647A}
+.panel{
+ background:linear-gradient(145deg,#0B3158 0%,#08294B 100%);
+ border:1px solid #1C5686;
+ box-shadow:0 8px 24px #00172c55;
+}
+h2,h3{color:#F4C65D}
+label{color:#F0D58A}
+input:not([type=checkbox]):not([type=range]),select{
+ background:#FFFFFF;color:#10243A;border:1px solid #D7E0EA;
+ box-shadow:inset 0 1px 2px #00172c12;
+}
+input[type=checkbox]{accent-color:#E8B43F}
+button{
+ background:#FFFFFF;color:#082B50;border:1px solid #E0E7EF;
+ box-shadow:0 2px 5px #00172c22;
+}
+button.secondary{
+ background:#FFFFFF;color:#082B50;border:1px solid #D6E1ED;
+}
+button.danger{
+ background:#FFFFFF;color:#9A3030;border:1px solid #E9C7C7;
+}
+.metric{background:#0D3964;border:1px solid #1B5685}
+.metric .k,.stat .k{color:#E7D08D}
+.metric .v,.stat strong{color:#FFFFFF}
+.warehouse{background:#0A2D51;border-color:#1C5686}
+.stat{background:#103A63}
+.status{background:#103D69;color:#F5D77F;border:1px solid #1B5685}
+.status.good{background:#153F35;color:#D7F5E4}
+.status.warn{background:#594719;color:#FFE7A1}
+.range{accent-color:#E8B43F}
+.timeline-time{color:#F5C65D}
+.capacity,.help,.muted,small{color:#E1D5A8}
+footer{color:#D6DFEA}
+hr{border-top-color:#1B5685}
+a{color:#FFD36A}
+
 </style>
 </head>
 <body>

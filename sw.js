@@ -1,12 +1,5 @@
-
-const CACHE = 'simulador-milho-pwa-v3';
-
-const FILES = [
-  './',
-  './index.html',
-  './manifest.webmanifest',
-  './icon.png'
-];
+const CACHE = 'simulador-milho-pwa-v4';
+const FILES = ['./', './index.html', './manifest.webmanifest', './icon.png'];
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -20,8 +13,7 @@ self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
       .then(keys => Promise.all(
-        keys
-          .filter(key => key !== CACHE)
+        keys.filter(key => key.startsWith('simulador-milho-pwa-') && key !== CACHE)
           .map(key => caches.delete(key))
       ))
       .then(() => self.clients.claim())
@@ -29,22 +21,15 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+  if (event.request.method !== 'GET') return;
   event.respondWith(
     caches.match(event.request).then(cached => {
       if (cached) return cached;
-
       return fetch(event.request).then(response => {
-        if (
-          event.request.method === 'GET' &&
-          new URL(event.request.url).origin === location.origin
-        ) {
+        if (response.ok && new URL(event.request.url).origin === self.location.origin) {
           const copy = response.clone();
-
-          caches.open(CACHE).then(cache => {
-            cache.put(event.request, copy);
-          });
+          caches.open(CACHE).then(cache => cache.put(event.request, copy));
         }
-
         return response;
       }).catch(() => caches.match('./index.html'));
     })
