@@ -1,0 +1,20 @@
+SIMULADOR OPERACIONAL DE MILHO — PWA
+
+Conteúdo:
+- index.html: aplicativo
+- manifest.webmanifest: configuração PWA
+- sw.js: cache offline
+- icon.svg: ícone
+
+COMO TESTAR:
+1. Extraia o ZIP.
+2. Para abrir apenas como protótipo, abra index.html no navegador.
+3. Para instalar como PWA e habilitar cache offline, publique estes arquivos em um servidor HTTPS estático (por exemplo, GitHub Pages ou hospedagem própria).
+4. Abra o endereço HTTPS no Chrome/Edge e use "Instalar app" ou "Adicionar à tela inicial".
+5. Após carregar uma vez online, o service worker mantém os arquivos básicos disponíveis offline. Os valores ficam no armazenamento local do navegador/dispositivo.
+
+Observações:
+- Os dados não sincronizam entre dispositivos.
+- Limpar dados do navegador pode apagar os parâmetros salvos.
+- O simulador é independente e não se conecta à automação industrial/ERP.
+- Validar a regra de distribuição da entrada entre armazéns com o processo real antes de uso operacional.
