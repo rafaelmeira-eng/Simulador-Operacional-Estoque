@@ -270,11 +270,24 @@ function durationHours(e){
  return b>a?(b-a)/3600000:0;
 }
 function eventRemovalUntil(i,targetT,stopT,grind){
- const e=events[i];if(!e.on)return 0;
- const a=dateTime(e.startDate,e.startTime).getTime(),b=dateTime(e.endDate,e.endTime).getTime();
- if(!(b>a))return 0;
- const from=Math.max(stopT.getTime(),a),to=Math.min(targetT.getTime(),b);
- return Math.max(0,to-from)/3600000*grind;
+ if(!events[i].on)return 0;
+ const from=stopT.getTime(),to=Math.min(targetT.getTime(),dateTime($('restartDate').value,$('restartTime').value).getTime());
+ if(!(to>from))return 0;
+ const boundaries=[from,to];
+ for(const e of events){if(!e.on)continue;
+  const a=dateTime(e.startDate,e.startTime).getTime(),b=dateTime(e.endDate,e.endTime).getTime();
+  if(b<=a)continue;
+  if(a>from&&a<to)boundaries.push(a);
+  if(b>from&&b<to)boundaries.push(b);
+ }
+ boundaries.sort((a,b)=>a-b);
+ let removed=0;
+ for(let j=0;j<boundaries.length-1;j++){
+  const a=boundaries[j],b=boundaries[j+1],mid=a+(b-a)/2;
+  const active=events.filter(e=>e.on&&dateTime(e.startDate,e.startTime).getTime()<=mid&&dateTime(e.endDate,e.endTime).getTime()>mid);
+  if(active.includes(events[i]))removed+=(b-a)/3600000*grind/active.length;
+ }
+ return removed;
 }
 function snapshotRates(){return {receiving:receiving.map(r=>({...r})),processOn,processRate};}
 function ratesAt(t){
@@ -302,7 +315,15 @@ function computeAt(targetT){
    const a=points[j],b=points[j+1],snap=ratesAt(a),h=(b-a)/3600000;
    for(let i=0;i<4;i++){if(!snap.receiving[i].on)continue;const add=snap.receiving[i].rate*h;result[i]=Math.min(CAPS[i],result[i]+add);}
    let take=num('withdraw')*h;
-   for(let i=0;i<4&&take>0;i++){if(!events[i].on)continue;const amount=Math.min(result[i],take);result[i]-=amount;take-=amount;}
+   let active=events.map((e,i)=>e.on?i:-1).filter(i=>i>=0&&result[i]>0);
+   while(take>1e-8&&active.length){
+    const share=take/active.length;
+    let removed=0;
+    for(const i of active){const amount=Math.min(result[i],share);result[i]-=amount;removed+=amount;}
+    if(removed<=1e-8)break;
+    take-=removed;
+    active=active.filter(i=>result[i]>1e-8);
+   }
   }
  }
  return result.map((v,i)=>clamp(v,0,CAPS[i]));
